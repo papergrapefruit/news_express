@@ -4,6 +4,8 @@ var exphbs = require('express-handlebars');
 var bodyParser = require("body-parser");
 var logger = require("morgan");
 var mongoose = require("mongoose");
+var uri = 'mongodb://heroku_5t1jgflk:1a5k4m7sc3ar3oiko3evj0o3m7@ds013475.mlab.com:13475/heroku_5t1jgflk';
+
 // Requiring our Note and Article models
 var Note = require("./models/note.js");
 var Article = require("./models/article.js");
@@ -14,7 +16,10 @@ var cheerio = require("cheerio");
 
 
 // Set mongoose to leverage built in JavaScript ES6 Promises
-mongoose.Promise = Promise;
+mongoose.Promise = global.Promise;
+
+mongoose.connect(uri);
+
 
 
 // Initialize Express
@@ -40,16 +45,16 @@ app.use(express.static("public"));
 
 // Database configuration with mongoose
 
-var promise = mongoose.connect('mongodb://heroku_5t1jgflk:1a5k4m7sc3ar3oiko3evj0o3m7@ds013475.mlab.com:13475/heroku_5t1jgflk', {
-  useMongoClient: true,
-  /* other options */
-});
+// var promise = mongoose.connect('mongodb://heroku_5t1jgflk:1a5k4m7sc3ar3oiko3evj0o3m7@ds013475.mlab.com:13475/heroku_5t1jgflk', {
+//   useMongoClient: true,
+//   /* other options */
+// });
 
 
 // mongoose.connect("");mongodb://heroku_5t1jgflk:1a5k4m7sc3ar3oiko3evj0o3m7@ds013475.mlab.com:13475/heroku_5t1jgflk
 var db = mongoose.connection;
 
-promise.then(function (db) {
+// promise.then(function (db) {
 
 
 // Show any mongoose errors
@@ -62,7 +67,7 @@ db.once("openUri", function () {
   console.log("Mongoose connection successful.");
 });
 
-});
+// });
 
 // Routes
 // ======
