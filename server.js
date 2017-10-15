@@ -13,8 +13,8 @@ var cheerio = require("cheerio");
 
 
 
-// // Set mongoose to leverage built in JavaScript ES6 Promises
-// mongoose.Promise = Promise;
+// Set mongoose to leverage built in JavaScript ES6 Promises
+mongoose.Promise = Promise;
 
 
 // Initialize Express
