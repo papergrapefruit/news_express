@@ -13,8 +13,8 @@ var cheerio = require("cheerio");
 
 
 
-// Set mongoose to leverage built in JavaScript ES6 Promises
-mongoose.Promise = Promise;
+// // Set mongoose to leverage built in JavaScript ES6 Promises
+// mongoose.Promise = Promise;
 
 
 // Initialize Express
@@ -44,8 +44,13 @@ var promise = mongoose.connect('mongodb://heroku_5t1jgflk:1a5k4m7sc3ar3oiko3evj0
   useMongoClient: true,
   /* other options */
 });
+
+
 // mongoose.connect("");mongodb://heroku_5t1jgflk:1a5k4m7sc3ar3oiko3evj0o3m7@ds013475.mlab.com:13475/heroku_5t1jgflk
 var db = mongoose.connection;
+
+promise.then(function (db) {
+
 
 // Show any mongoose errors
 db.on("error", function (error) {
@@ -57,6 +62,7 @@ db.once("openUri", function () {
   console.log("Mongoose connection successful.");
 });
 
+});
 
 // Routes
 // ======
