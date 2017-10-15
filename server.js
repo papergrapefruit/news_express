@@ -10,6 +10,9 @@ var Article = require("./models/Article.js");
 // Our scraping tools
 var request = require("request");
 var cheerio = require("cheerio");
+
+
+
 // Set mongoose to leverage built in JavaScript ES6 Promises
 mongoose.Promise = Promise;
 
@@ -17,14 +20,14 @@ mongoose.Promise = Promise;
 // Initialize Express
 var app = express();
 
-app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
 
 app.get('/', function (req, res) {
-    res.render('home');
+  res.render('index');
 });
 
-app.listen(3000);
+
 
 // Use morgan and body parser with our app
 app.use(logger("dev"));
@@ -36,7 +39,7 @@ app.use(bodyParser.urlencoded({
 app.use(express.static("public"));
 
 // Database configuration with mongoose
-mongoose.connect("mongodb://localhost/week18day3mongoose");
+mongoose.connect("mongodb://localhost/news_express");
 var db = mongoose.connection;
 
 // Show any mongoose errors
@@ -45,7 +48,7 @@ db.on("error", function (error) {
 });
 
 // Once logged in to the db through mongoose, log a success message
-db.once("open", function () {
+db.once("openUri", function () {
   console.log("Mongoose connection successful.");
 });
 
@@ -53,21 +56,28 @@ db.once("open", function () {
 // Routes
 // ======
 
-// A GET request to scrape the echojs website
+// A GET request to scrape website
 app.get("/scrape", function (req, res) {
   // First, we grab the body of the html with request
-  request("http://www.echojs.com/", function (error, response, html) {
+  var link = "http://www.theonion.com";
+  request(link, function (error, response, html) {
     // Then, we load that into cheerio and save it to $ for a shorthand selector
     var $ = cheerio.load(html);
-    // Now, we grab every h2 within an article tag, and do the following:
-    $("article h2").each(function (i, element) {
+
+    // Now, we grab and do the following:
+    $("article").find('.headline').each(function (i, element) {
 
       // Save an empty result object
       var result = {};
 
       // Add the text and href of every link, and save them as properties of the result object
-      result.title = $(this).children("a").text();
-      result.link = $(this).children("a").attr("href");
+      result.headline = $(this).children("a").text().trim();
+      var relPath = $(element).children("a").attr("href");
+      result.link = link + relPath;
+      result.summary = $(this).parent('header').siblings('div.desc').text().trim();
+
+
+
 
       // Using our Article model, create a new entry
       // This effectively passes the result object to the entry (and the title and link)
@@ -110,8 +120,8 @@ app.get("/articles", function (req, res) {
 app.get("/articles/:id", function (req, res) {
   // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
   Article.findOne({
-      "_id": req.params.id
-    })
+    "_id": req.params.id
+  })
     // ..and populate all of the notes associated with it
     .populate("note")
     // now, execute our query
@@ -143,8 +153,8 @@ app.post("/articles/:id", function (req, res) {
     else {
       // Use the article id to find and update it's note
       Article.findOneAndUpdate({
-          "_id": req.params.id
-        }, {
+        "_id": req.params.id
+      }, {
           "note": doc._id
         })
         // Execute the above query
