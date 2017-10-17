@@ -1,0 +1,51 @@
+.page-header{
+  background-image: url("http://winethink.net/blog/wp-content/uploads/onionlogo.jpg");
+  background-repeat: no-repeat;
+  text-align: center;
+}
+
+h1 {
+  color: blueviolet;
+  font-family: 'Black Ops One',
+  cursive;
+  font-size: 45px;
+  text-align: center;
+
+}
+small{
+  font-family: 'Rammetto One',
+  cursive;
+  font-size: 20px;
+  text-align: right;
+}
+
+u {
+background: greenyellow;
+}
+
+ #notes {
+   float: right;
+   width: 30%;
+ }
+
+ textarea,
+ input {
+   display: block;
+   width: 100%;
+   background-color: #FCF5C7;
+ }
+
+ input {
+   height: 36px;
+   font-size: 24px;
+ }
+
+ textarea {
+   height: 200px;
+   font-size: 18px;
+ }
+
+ #articles{
+   font-family: 'Source Code Pro',
+   monospace;
+ }

@@ -25,7 +25,9 @@ mongoose.connect(uri);
 // Initialize Express
 var app = express();
 
-app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
+app.engine('handlebars', exphbs({
+  defaultLayout: 'main'
+}));
 app.set('view engine', 'handlebars');
 
 app.get('/', function (req, res) {
@@ -92,9 +94,6 @@ app.get("/scrape", function (req, res) {
       result.link = link + relPath;
       result.summary = $(this).parent('header').siblings('div.desc').text().trim();
 
-
-
-
       // Using our Article model, create a new entry
       // This effectively passes the result object to the entry (and the title and link)
       var entry = new Article(result);
@@ -114,7 +113,7 @@ app.get("/scrape", function (req, res) {
     });
   });
   // Tell the browser that we finished scraping the text
-  res.send("Scrape Complete");
+  res.redirect('/');
 });
 
 // This will get the articles we scraped from the mongoDB
@@ -136,8 +135,8 @@ app.get("/articles", function (req, res) {
 app.get("/articles/:id", function (req, res) {
   // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
   Article.findOne({
-    "_id": req.params.id
-  })
+      "_id": req.params.id
+    })
     // ..and populate all of the notes associated with it
     .populate("note")
     // now, execute our query
@@ -169,8 +168,8 @@ app.post("/articles/:id", function (req, res) {
     else {
       // Use the article id to find and update it's note
       Article.findOneAndUpdate({
-        "_id": req.params.id
-      }, {
+          "_id": req.params.id
+        }, {
           "note": doc._id
         })
         // Execute the above query
